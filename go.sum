@@ -1,5 +1,5 @@
-github.com/agentplexus/omnivoice v0.1.0 h1:0CBwBaCcLFxq1wWgposm8E4mtSoNrQK71Q94bwMKto8=
-github.com/agentplexus/omnivoice v0.1.0/go.mod h1:LfxHfgrgrBg5isbaggYMpnwkN+zrCD1ziQA6StOMvkQ=
+github.com/agentplexus/omnivoice v0.2.0 h1:r8SP5fCVE88ZrGESE0QYBY1vVMeLtRWKhcwsaIaSiVE=
+github.com/agentplexus/omnivoice v0.2.0/go.mod h1:LfxHfgrgrBg5isbaggYMpnwkN+zrCD1ziQA6StOMvkQ=
 github.com/beevik/etree v1.1.0/go.mod h1:r8Aw8JqVegEf0w2fDnATrX9VpkMcyFeM0FhwO62wh+A=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
