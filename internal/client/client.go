@@ -1,35 +1,28 @@
-// Package client provides a Twilio API client for internal use.
+// Package client provides a Twilio API client wrapper using the official twilio-go SDK.
 package client
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"io"
-	"net/http"
-	"net/url"
 	"os"
-	"strings"
-	"time"
+
+	"github.com/twilio/twilio-go"
+	openapi "github.com/twilio/twilio-go/rest/api/v2010"
 )
 
-// Client is a Twilio API client.
+// Client wraps the official Twilio SDK for internal use.
 type Client struct {
+	restClient *twilio.RestClient
 	accountSID string
-	authToken  string
-	baseURL    string
-	httpClient *http.Client
 }
 
 // Config configures the Twilio client.
 type Config struct {
 	AccountSID string
 	AuthToken  string
-	BaseURL    string
-	HTTPClient *http.Client
 }
 
-// New creates a new Twilio client.
+// New creates a new Twilio client using the official SDK.
 func New(cfg *Config) (*Client, error) {
 	if cfg == nil {
 		cfg = &Config{}
@@ -51,23 +44,14 @@ func New(cfg *Config) (*Client, error) {
 		return nil, fmt.Errorf("TWILIO_AUTH_TOKEN is required")
 	}
 
-	baseURL := cfg.BaseURL
-	if baseURL == "" {
-		baseURL = "https://api.twilio.com/2010-04-01"
-	}
-
-	httpClient := cfg.HTTPClient
-	if httpClient == nil {
-		httpClient = &http.Client{
-			Timeout: 30 * time.Second,
-		}
-	}
+	restClient := twilio.NewRestClientWithParams(twilio.ClientParams{
+		Username: accountSID,
+		Password: authToken,
+	})
 
 	return &Client{
+		restClient: restClient,
 		accountSID: accountSID,
-		authToken:  authToken,
-		baseURL:    baseURL,
-		httpClient: httpClient,
 	}, nil
 }
 
@@ -76,24 +60,55 @@ func (c *Client) AccountSID() string {
 	return c.accountSID
 }
 
+// RestClient returns the underlying Twilio REST client.
+func (c *Client) RestClient() *twilio.RestClient {
+	return c.restClient
+}
+
 // Call represents a Twilio call resource.
 type Call struct {
-	SID         string `json:"sid"`
-	AccountSID  string `json:"account_sid"`
-	To          string `json:"to"`
-	From        string `json:"from"`
-	Status      string `json:"status"`
-	Direction   string `json:"direction"`
-	Duration    string `json:"duration"`
-	StartTime   string `json:"start_time"`
-	EndTime     string `json:"end_time"`
-	Price       string `json:"price"`
-	PriceUnit   string `json:"price_unit"`
-	AnsweredBy  string `json:"answered_by"`
-	CallerName  string `json:"caller_name"`
-	URI         string `json:"uri"`
-	DateCreated string `json:"date_created"`
-	DateUpdated string `json:"date_updated"`
+	SID        string
+	AccountSID string
+	To         string
+	From       string
+	Status     string
+	Direction  string
+	Duration   string
+	StartTime  string
+	EndTime    string
+}
+
+// callFromAPI converts an API call response to our Call type.
+func callFromAPI(apiCall *openapi.ApiV2010Call) *Call {
+	call := &Call{}
+	if apiCall.Sid != nil {
+		call.SID = *apiCall.Sid
+	}
+	if apiCall.AccountSid != nil {
+		call.AccountSID = *apiCall.AccountSid
+	}
+	if apiCall.To != nil {
+		call.To = *apiCall.To
+	}
+	if apiCall.From != nil {
+		call.From = *apiCall.From
+	}
+	if apiCall.Status != nil {
+		call.Status = *apiCall.Status
+	}
+	if apiCall.Direction != nil {
+		call.Direction = *apiCall.Direction
+	}
+	if apiCall.Duration != nil {
+		call.Duration = *apiCall.Duration
+	}
+	if apiCall.StartTime != nil {
+		call.StartTime = *apiCall.StartTime
+	}
+	if apiCall.EndTime != nil {
+		call.EndTime = *apiCall.EndTime
+	}
+	return call
 }
 
 // MakeCallParams are parameters for making a call.
@@ -108,61 +123,56 @@ type MakeCallParams struct {
 	Timeout             int               // Ring timeout in seconds
 	Record              bool              // Record the call
 	RecordingChannels   string            // "mono" or "dual"
-	CustomParameters    map[string]string // Custom parameters
+	CustomParameters    map[string]string // Custom parameters (unused with SDK)
 }
 
 // MakeCall initiates an outbound call.
 func (c *Client) MakeCall(ctx context.Context, params *MakeCallParams) (*Call, error) {
-	endpoint := fmt.Sprintf("%s/Accounts/%s/Calls.json", c.baseURL, c.accountSID)
-
-	data := url.Values{}
-	data.Set("To", params.To)
-	data.Set("From", params.From)
+	createParams := &openapi.CreateCallParams{}
+	createParams.SetTo(params.To)
+	createParams.SetFrom(params.From)
 
 	if params.URL != "" {
-		data.Set("Url", params.URL)
+		createParams.SetUrl(params.URL)
 	}
 	if params.Twiml != "" {
-		data.Set("Twiml", params.Twiml)
+		createParams.SetTwiml(params.Twiml)
 	}
 	if params.StatusCallback != "" {
-		data.Set("StatusCallback", params.StatusCallback)
+		createParams.SetStatusCallback(params.StatusCallback)
 	}
-	for _, event := range params.StatusCallbackEvent {
-		data.Add("StatusCallbackEvent", event)
+	if len(params.StatusCallbackEvent) > 0 {
+		createParams.SetStatusCallbackEvent(params.StatusCallbackEvent)
 	}
 	if params.MachineDetection != "" {
-		data.Set("MachineDetection", params.MachineDetection)
+		createParams.SetMachineDetection(params.MachineDetection)
 	}
 	if params.Timeout > 0 {
-		data.Set("Timeout", fmt.Sprintf("%d", params.Timeout))
+		createParams.SetTimeout(params.Timeout)
 	}
 	if params.Record {
-		data.Set("Record", "true")
+		createParams.SetRecord(true)
 	}
 	if params.RecordingChannels != "" {
-		data.Set("RecordingChannels", params.RecordingChannels)
-	}
-	for k, v := range params.CustomParameters {
-		data.Set(k, v)
+		createParams.SetRecordingChannels(params.RecordingChannels)
 	}
 
-	var call Call
-	if err := c.post(ctx, endpoint, data, &call); err != nil {
-		return nil, err
+	apiCall, err := c.restClient.Api.CreateCall(createParams)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create call: %w", err)
 	}
-	return &call, nil
+
+	return callFromAPI(apiCall), nil
 }
 
 // GetCall retrieves a call by SID.
 func (c *Client) GetCall(ctx context.Context, callSID string) (*Call, error) {
-	endpoint := fmt.Sprintf("%s/Accounts/%s/Calls/%s.json", c.baseURL, c.accountSID, callSID)
-
-	var call Call
-	if err := c.get(ctx, endpoint, &call); err != nil {
-		return nil, err
+	apiCall, err := c.restClient.Api.FetchCall(callSID, nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to fetch call: %w", err)
 	}
-	return &call, nil
+
+	return callFromAPI(apiCall), nil
 }
 
 // UpdateCallParams are parameters for updating a call.
@@ -174,24 +184,24 @@ type UpdateCallParams struct {
 
 // UpdateCall modifies an in-progress call.
 func (c *Client) UpdateCall(ctx context.Context, callSID string, params *UpdateCallParams) (*Call, error) {
-	endpoint := fmt.Sprintf("%s/Accounts/%s/Calls/%s.json", c.baseURL, c.accountSID, callSID)
+	updateParams := &openapi.UpdateCallParams{}
 
-	data := url.Values{}
 	if params.URL != "" {
-		data.Set("Url", params.URL)
+		updateParams.SetUrl(params.URL)
 	}
 	if params.Twiml != "" {
-		data.Set("Twiml", params.Twiml)
+		updateParams.SetTwiml(params.Twiml)
 	}
 	if params.Status != "" {
-		data.Set("Status", params.Status)
+		updateParams.SetStatus(params.Status)
 	}
 
-	var call Call
-	if err := c.post(ctx, endpoint, data, &call); err != nil {
-		return nil, err
+	apiCall, err := c.restClient.Api.UpdateCall(callSID, updateParams)
+	if err != nil {
+		return nil, fmt.Errorf("failed to update call: %w", err)
 	}
-	return &call, nil
+
+	return callFromAPI(apiCall), nil
 }
 
 // HangupCall ends a call.
@@ -201,92 +211,40 @@ func (c *Client) HangupCall(ctx context.Context, callSID string) (*Call, error) 
 
 // PhoneNumber represents a Twilio phone number.
 type PhoneNumber struct {
-	SID          string `json:"sid"`
-	PhoneNumber  string `json:"phone_number"`
-	FriendlyName string `json:"friendly_name"`
-	Capabilities struct {
-		Voice bool `json:"voice"`
-		SMS   bool `json:"sms"`
-		MMS   bool `json:"mms"`
-	} `json:"capabilities"`
-}
-
-// PhoneNumberList is a list of phone numbers.
-type PhoneNumberList struct {
-	PhoneNumbers []PhoneNumber `json:"incoming_phone_numbers"`
+	SID          string
+	PhoneNumber  string
+	FriendlyName string
+	VoiceCapable bool
+	SMSCapable   bool
+	MMSCapable   bool
 }
 
 // ListPhoneNumbers returns all phone numbers on the account.
 func (c *Client) ListPhoneNumbers(ctx context.Context) ([]PhoneNumber, error) {
-	endpoint := fmt.Sprintf("%s/Accounts/%s/IncomingPhoneNumbers.json", c.baseURL, c.accountSID)
-
-	var list PhoneNumberList
-	if err := c.get(ctx, endpoint, &list); err != nil {
-		return nil, err
-	}
-	return list.PhoneNumbers, nil
-}
-
-// Error represents a Twilio API error.
-type Error struct {
-	Code     int    `json:"code"`
-	Message  string `json:"message"`
-	MoreInfo string `json:"more_info"`
-	Status   int    `json:"status"`
-}
-
-func (e *Error) Error() string {
-	return fmt.Sprintf("twilio error %d: %s", e.Code, e.Message)
-}
-
-// get performs a GET request.
-func (c *Client) get(ctx context.Context, url string, result any) error {
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
+	apiNumbers, err := c.restClient.Api.ListIncomingPhoneNumber(nil)
 	if err != nil {
-		return err
-	}
-	return c.do(req, result)
-}
-
-// post performs a POST request with form data.
-func (c *Client) post(ctx context.Context, url string, data url.Values, result any) error {
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, strings.NewReader(data.Encode()))
-	if err != nil {
-		return err
-	}
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	return c.do(req, result)
-}
-
-// do executes a request with authentication.
-func (c *Client) do(req *http.Request, result any) error {
-	req.SetBasicAuth(c.accountSID, c.authToken)
-	req.Header.Set("Accept", "application/json")
-
-	resp, err := c.httpClient.Do(req)
-	if err != nil {
-		return err
-	}
-	defer func() { _ = resp.Body.Close() }()
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return err
+		return nil, fmt.Errorf("failed to list phone numbers: %w", err)
 	}
 
-	if resp.StatusCode >= 400 {
-		var apiErr Error
-		if err := json.Unmarshal(body, &apiErr); err != nil {
-			return fmt.Errorf("twilio error: %s", string(body))
+	numbers := make([]PhoneNumber, 0, len(apiNumbers))
+	for _, n := range apiNumbers {
+		pn := PhoneNumber{}
+		if n.Sid != nil {
+			pn.SID = *n.Sid
 		}
-		return &apiErr
-	}
-
-	if result != nil {
-		if err := json.Unmarshal(body, result); err != nil {
-			return fmt.Errorf("failed to parse response: %w", err)
+		if n.PhoneNumber != nil {
+			pn.PhoneNumber = *n.PhoneNumber
 		}
+		if n.FriendlyName != nil {
+			pn.FriendlyName = *n.FriendlyName
+		}
+		if n.Capabilities != nil {
+			pn.VoiceCapable = n.Capabilities.Voice
+			pn.SMSCapable = n.Capabilities.Sms
+			pn.MMSCapable = n.Capabilities.Mms
+		}
+		numbers = append(numbers, pn)
 	}
 
-	return nil
+	return numbers, nil
 }
