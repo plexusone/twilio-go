@@ -5,7 +5,7 @@ go 1.24.11
 require (
 	github.com/agentplexus/omnivoice v0.3.0
 	github.com/gorilla/websocket v1.5.3
-	github.com/twilio/twilio-go v1.30.0
+	github.com/twilio/twilio-go v1.30.1
 )
 
 require (
