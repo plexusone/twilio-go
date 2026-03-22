@@ -15,7 +15,10 @@ import (
 )
 
 // Verify interface compliance at compile time.
-var _ callsystem.CallSystem = (*Provider)(nil)
+var (
+	_ callsystem.CallSystem  = (*Provider)(nil)
+	_ callsystem.SMSProvider = (*Provider)(nil)
+)
 
 // Provider implements callsystem.CallSystem using Twilio.
 type Provider struct {
@@ -301,6 +304,38 @@ func (p *Provider) HandleStatusCallback(callSID, status string) {
 // Transport returns the transport provider for Media Streams.
 func (p *Provider) Transport() *transport.Provider {
 	return p.transport
+}
+
+// SendSMS sends an SMS message using the default phone number.
+func (p *Provider) SendSMS(ctx context.Context, to, body string) (*callsystem.SMSMessage, error) {
+	return p.SendSMSFrom(ctx, to, p.defaultFrom, body)
+}
+
+// SendSMSFrom sends an SMS message from a specific phone number.
+func (p *Provider) SendSMSFrom(ctx context.Context, to, from, body string) (*callsystem.SMSMessage, error) {
+	if from == "" {
+		from = p.defaultFrom
+	}
+	if from == "" {
+		return nil, fmt.Errorf("from number is required")
+	}
+
+	msg, err := p.client.SendSMS(ctx, &client.SendSMSParams{
+		To:   to,
+		From: from,
+		Body: body,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("failed to send SMS: %w", err)
+	}
+
+	return &callsystem.SMSMessage{
+		ID:     msg.SID,
+		To:     msg.To,
+		From:   msg.From,
+		Body:   msg.Body,
+		Status: msg.Status,
+	}, nil
 }
 
 // Call implements callsystem.Call for Twilio calls.

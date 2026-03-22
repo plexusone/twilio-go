@@ -209,6 +209,70 @@ func (c *Client) HangupCall(ctx context.Context, callSID string) (*Call, error) 
 	return c.UpdateCall(ctx, callSID, &UpdateCallParams{Status: "completed"})
 }
 
+// Message represents an SMS/MMS message.
+type Message struct {
+	SID        string
+	AccountSID string
+	To         string
+	From       string
+	Body       string
+	Status     string
+	Direction  string
+	DateSent   string
+}
+
+// messageFromAPI converts an API message response to our Message type.
+func messageFromAPI(apiMsg *openapi.ApiV2010Message) *Message {
+	msg := &Message{}
+	if apiMsg.Sid != nil {
+		msg.SID = *apiMsg.Sid
+	}
+	if apiMsg.AccountSid != nil {
+		msg.AccountSID = *apiMsg.AccountSid
+	}
+	if apiMsg.To != nil {
+		msg.To = *apiMsg.To
+	}
+	if apiMsg.From != nil {
+		msg.From = *apiMsg.From
+	}
+	if apiMsg.Body != nil {
+		msg.Body = *apiMsg.Body
+	}
+	if apiMsg.Status != nil {
+		msg.Status = *apiMsg.Status
+	}
+	if apiMsg.Direction != nil {
+		msg.Direction = *apiMsg.Direction
+	}
+	if apiMsg.DateSent != nil {
+		msg.DateSent = *apiMsg.DateSent
+	}
+	return msg
+}
+
+// SendSMSParams are parameters for sending an SMS.
+type SendSMSParams struct {
+	To   string
+	From string
+	Body string
+}
+
+// SendSMS sends an SMS message.
+func (c *Client) SendSMS(ctx context.Context, params *SendSMSParams) (*Message, error) {
+	createParams := &openapi.CreateMessageParams{}
+	createParams.SetTo(params.To)
+	createParams.SetFrom(params.From)
+	createParams.SetBody(params.Body)
+
+	apiMsg, err := c.restClient.Api.CreateMessage(createParams)
+	if err != nil {
+		return nil, fmt.Errorf("failed to send SMS: %w", err)
+	}
+
+	return messageFromAPI(apiMsg), nil
+}
+
 // PhoneNumber represents a Twilio phone number.
 type PhoneNumber struct {
 	SID          string
