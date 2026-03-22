@@ -1,10 +1,29 @@
 # OmniVoice Twilio Provider
 
-[![Build Status][build-status-svg]][build-status-url]
-[![Lint Status][lint-status-svg]][lint-status-url]
+[![Go CI][go-ci-svg]][go-ci-url]
+[![Go Lint][go-lint-svg]][go-lint-url]
+[![Go SAST][go-sast-svg]][go-sast-url]
 [![Go Report Card][goreport-svg]][goreport-url]
 [![Docs][docs-godoc-svg]][docs-godoc-url]
+[![Visualization][viz-svg]][viz-url]
 [![License][license-svg]][license-url]
+
+ [go-ci-svg]: https://github.com/plexusone/omnivoice-twilio/actions/workflows/go-ci.yaml/badge.svg?branch=main
+ [go-ci-url]: https://github.com/plexusone/omnivoice-twilio/actions/workflows/go-ci.yaml
+ [go-lint-svg]: https://github.com/plexusone/omnivoice-twilio/actions/workflows/go-lint.yaml/badge.svg?branch=main
+ [go-lint-url]: https://github.com/plexusone/omnivoice-twilio/actions/workflows/go-lint.yaml
+ [go-sast-svg]: https://github.com/plexusone/omnivoice-twilio/actions/workflows/go-sast-codeql.yaml/badge.svg?branch=main
+ [go-sast-url]: https://github.com/plexusone/omnivoice-twilio/actions/workflows/go-sast-codeql.yaml
+ [goreport-svg]: https://goreportcard.com/badge/github.com/plexusone/omnivoice-twilio
+ [goreport-url]: https://goreportcard.com/report/github.com/plexusone/omnivoice-twilio
+ [docs-godoc-svg]: https://pkg.go.dev/badge/github.com/plexusone/omnivoice-twilio
+ [docs-godoc-url]: https://pkg.go.dev/github.com/plexusone/omnivoice-twilio
+ [viz-svg]: https://img.shields.io/badge/visualizaton-Go-blue.svg
+ [viz-url]: https://mango-dune-07a8b7110.1.azurestaticapps.net/?repo=plexusone%2Fomnivoice-twilio
+ [loc-svg]: https://tokei.rs/b1/github/plexusone/omnivoice-twilio
+ [repo-url]: https://github.com/plexusone/omnivoice-twilio
+ [license-svg]: https://img.shields.io/badge/license-MIT-blue.svg
+ [license-url]: https://github.com/plexusone/omnivoice-twilio/blob/master/LICENSE
 
 Twilio provider implementation for [OmniVoice](https://github.com/agentplexus/omnivoice) - the voice abstraction layer for AgentPlexus.
 
@@ -293,16 +312,3 @@ go test -v -tags=integration -run TestConformance/Integration ./callsystem/
 ## License
 
 MIT
-
- [build-status-svg]: https://github.com/agentplexus/omnivoice-twilio/actions/workflows/ci.yaml/badge.svg?branch=main
- [build-status-url]: https://github.com/agentplexus/omnivoice-twilio/actions/workflows/ci.yaml
- [lint-status-svg]: https://github.com/agentplexus/omnivoice-twilio/actions/workflows/lint.yaml/badge.svg?branch=main
- [lint-status-url]: https://github.com/agentplexus/omnivoice-twilio/actions/workflows/lint.yaml
- [goreport-svg]: https://goreportcard.com/badge/github.com/agentplexus/omnivoice-twilio
- [goreport-url]: https://goreportcard.com/report/github.com/agentplexus/omnivoice-twilio
- [docs-godoc-svg]: https://pkg.go.dev/badge/github.com/agentplexus/omnivoice-twilio
- [docs-godoc-url]: https://pkg.go.dev/github.com/agentplexus/omnivoice-twilio
- [license-svg]: https://img.shields.io/badge/license-MIT-blue.svg
- [license-url]: https://github.com/agentplexus/omnivoice-twilio/blob/master/LICENSE
- [used-by-svg]: https://sourcegraph.com/github.com/agentplexus/omnivoice-twilio/-/badge.svg
- [used-by-url]: https://sourcegraph.com/github.com/agentplexus/omnivoice-twilio?badge
