@@ -25,19 +25,20 @@
  [license-svg]: https://img.shields.io/badge/license-MIT-blue.svg
  [license-url]: https://github.com/plexusone/omnivoice-twilio/blob/master/LICENSE
 
-Twilio provider implementation for [OmniVoice](https://github.com/agentplexus/omnivoice) - the voice abstraction layer for AgentPlexus.
+Twilio provider implementation for [OmniVoice](https://github.com/plexusone/omnivoice-core) - the voice abstraction layer for AgentPlexus.
 
 ## Features
 
-- **CallSystem**: PSTN call handling (incoming/outgoing phone calls)
-- **Transport**: Twilio Media Streams for real-time audio
-- **TTS**: Text-to-speech via Twilio's Say verb (Alice, Polly, Google voices)
-- **STT**: Speech recognition via Gather verb and real-time transcription
+- 📞 **CallSystem**: PSTN call handling (incoming/outgoing phone calls)
+- 📡 **Transport**: Twilio Media Streams for real-time audio
+- 🗣️ **TTS**: Text-to-speech via Twilio's Say verb (Alice, Polly, Google voices)
+- 👂 **STT**: Speech recognition via Gather verb and real-time transcription
+- 💬 **SMS**: Send SMS messages via SMSProvider interface
 
 ## Installation
 
 ```bash
-go get github.com/agentplexus/omnivoice-twilio
+go get github.com/plexusone/omnivoice-twilio
 ```
 
 ## Quick Start
@@ -53,8 +54,8 @@ import (
     "log"
     "net/http"
 
-    "github.com/agentplexus/omnivoice-twilio/callsystem"
-    "github.com/agentplexus/omnivoice-twilio/transport"
+    "github.com/plexusone/omnivoice-twilio/callsystem"
+    "github.com/plexusone/omnivoice-twilio/transport"
 )
 
 func main() {
@@ -114,7 +115,7 @@ func handleMediaStream(tr *transport.Provider) http.HandlerFunc {
 ### TTS (Text-to-Speech)
 
 ```go
-import "github.com/agentplexus/omnivoice-twilio/tts"
+import "github.com/plexusone/omnivoice-twilio/tts"
 
 provider, _ := tts.New(
     tts.WithVoice("Polly.Joanna"),
@@ -136,7 +137,7 @@ result, _ := provider.Synthesize(ctx, "Hello, how can I help you?", tts.Synthesi
 ### STT (Speech-to-Text)
 
 ```go
-import "github.com/agentplexus/omnivoice-twilio/stt"
+import "github.com/plexusone/omnivoice-twilio/stt"
 
 provider, _ := stt.New(
     stt.WithLanguage("en-US"),
@@ -153,10 +154,29 @@ twiml := provider.GenerateGatherTwiML(stt.GatherConfig{
 })
 ```
 
+### SMS
+
+```go
+import "github.com/plexusone/omnivoice-twilio/callsystem"
+
+// Create provider with default phone number
+provider, _ := callsystem.New(
+    callsystem.WithPhoneNumber("+15551234567"),
+)
+
+// Send SMS using default number
+msg, _ := provider.SendSMS(ctx, "+15559876543", "Hello from OmniVoice!")
+
+// Send SMS from specific number
+msg, _ = provider.SendSMSFrom(ctx, "+15559876543", "+15551234567", "Hello!")
+
+fmt.Printf("Message sent: %s\n", msg.ID)
+```
+
 ### Transport (Media Streams)
 
 ```go
-import "github.com/agentplexus/omnivoice-twilio/transport"
+import "github.com/plexusone/omnivoice-twilio/transport"
 
 tr, _ := transport.New()
 
@@ -188,12 +208,12 @@ For a complete voice agent, combine Twilio (calls + transport) with ElevenLabs (
 
 ```go
 import (
-    "github.com/agentplexus/omnivoice/tts"
-    "github.com/agentplexus/omnivoice/stt"
-    twiliocs "github.com/agentplexus/omnivoice-twilio/callsystem"
-    twiliotransport "github.com/agentplexus/omnivoice-twilio/transport"
-    eleventts "github.com/agentplexus/omnivoice-elevenlabs/tts"
-    elevenstt "github.com/agentplexus/omnivoice-elevenlabs/stt"
+    "github.com/plexusone/omnivoice-core/tts"
+    "github.com/plexusone/omnivoice-core/stt"
+    twiliocs "github.com/plexusone/omnivoice-twilio/callsystem"
+    twiliotransport "github.com/plexusone/omnivoice-twilio/transport"
+    eleventts "github.com/plexusone/elevenlabs-go/omnivoice/tts"
+    elevenstt "github.com/plexusone/elevenlabs-go/omnivoice/stt"
 )
 
 // Phone handling: Twilio
@@ -247,7 +267,7 @@ provider, _ := callsystem.New(
 
 ## Testing
 
-Tests use the [OmniVoice conformance test](https://github.com/agentplexus/omnivoice) framework and are gated behind the `integration` build tag.
+Tests use the [OmniVoice conformance test](https://github.com/plexusone/omnivoice-core) framework and are gated behind the `integration` build tag.
 
 ### Run All Tests
 
@@ -306,8 +326,8 @@ go test -v -tags=integration -run TestConformance/Integration ./callsystem/
 
 ## Related Packages
 
-- [omnivoice](https://github.com/agentplexus/omnivoice) - Core interfaces
-- [omnivoice-elevenlabs](https://github.com/agentplexus/omnivoice-elevenlabs) - ElevenLabs provider (recommended for TTS/STT quality)
+- [omnivoice](https://github.com/plexusone/omnivoice-core) - Core interfaces
+- [elevenlabs-go](https://github.com/plexusone/elevenlabs-go) - ElevenLabs SDK with OmniVoice provider at `elevenlabs-go/omnivoice`
 
 ## License
 
