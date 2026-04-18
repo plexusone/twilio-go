@@ -1,11 +1,52 @@
 {
   "irVersion": "1.0",
-  "project": "omnivoice-twilio",
-  "repository": "https://github.com/plexusone/omnivoice-twilio",
+  "project": "twilio-go",
+  "repository": "https://github.com/plexusone/twilio-go",
   "versioning": "semver",
   "commitConvention": "conventional",
   "maintainers": ["johncwang@gmail.com"],
   "releases": [
+    {
+      "version": "v0.4.0",
+      "date": "2026-04-18",
+      "highlights": [
+        { "description": "**Breaking**: Rename from omnivoice-twilio to twilio-go" },
+        { "description": "Add OmniChat SMS provider for omnichat integration" }
+      ],
+      "changed": [
+        { "description": "**Breaking**: Module path changed from `github.com/plexusone/omnivoice-twilio` to `github.com/plexusone/twilio-go`", "commit": "932a039" },
+        { "description": "**Breaking**: Twilio client moved from `internal/client` to exported `client` package", "commit": "932a039" },
+        { "description": "**Breaking**: OmniVoice providers moved to `omnivoice/` subdirectory", "commit": "932a039" }
+      ],
+      "added": [
+        { "description": "OmniChat SMS provider implementing `provider.Provider` interface", "commit": "932a039" },
+        { "description": "Webhook handler for receiving inbound SMS via Twilio webhooks", "commit": "932a039" }
+      ],
+      "fixed": [
+        { "description": "Update import paths after rename", "commit": "f80eddc" },
+        { "description": "Resolve G120 gosec lint errors with `http.MaxBytesReader`", "commit": "4d80842" },
+        { "description": "Fix gofmt formatting", "commit": "b197bd6" }
+      ],
+      "documentation": [
+        { "description": "Update README with new package structure and examples", "commit": "91c4df1" },
+        { "description": "Update badge URLs to twilio-go", "commit": "91c4df1" }
+      ],
+      "build": [
+        { "description": "Update LICENSE years", "commit": "16f0abb" }
+      ],
+      "dependencies": [
+        { "description": "Bump `github.com/twilio/twilio-go` from 1.30.4 to 1.30.5", "commit": "4405e2f" }
+      ]
+    },
+    {
+      "version": "v0.3.1",
+      "date": "2026-04-01",
+      "dependencies": [
+        { "description": "Bump `github.com/plexusone/omnivoice-core` to v0.7.0", "commit": "ad6932a" },
+        { "description": "Bump `github.com/twilio/twilio-go` from 1.30.3 to 1.30.4", "commit": "3b25002" },
+        { "description": "Update Go module dependencies", "commit": "b02de48" }
+      ]
+    },
     {
       "version": "v0.3.0",
       "date": "2026-03-22",
