@@ -1,4 +1,4 @@
-# OmniVoice Twilio Provider
+# Twilio Go SDK
 
 [![Go CI][go-ci-svg]][go-ci-url]
 [![Go Lint][go-lint-svg]][go-lint-url]
@@ -8,24 +8,24 @@
 [![Visualization][viz-svg]][viz-url]
 [![License][license-svg]][license-url]
 
- [go-ci-svg]: https://github.com/plexusone/omnivoice-twilio/actions/workflows/go-ci.yaml/badge.svg?branch=main
- [go-ci-url]: https://github.com/plexusone/omnivoice-twilio/actions/workflows/go-ci.yaml
- [go-lint-svg]: https://github.com/plexusone/omnivoice-twilio/actions/workflows/go-lint.yaml/badge.svg?branch=main
- [go-lint-url]: https://github.com/plexusone/omnivoice-twilio/actions/workflows/go-lint.yaml
- [go-sast-svg]: https://github.com/plexusone/omnivoice-twilio/actions/workflows/go-sast-codeql.yaml/badge.svg?branch=main
- [go-sast-url]: https://github.com/plexusone/omnivoice-twilio/actions/workflows/go-sast-codeql.yaml
- [goreport-svg]: https://goreportcard.com/badge/github.com/plexusone/omnivoice-twilio
- [goreport-url]: https://goreportcard.com/report/github.com/plexusone/omnivoice-twilio
- [docs-godoc-svg]: https://pkg.go.dev/badge/github.com/plexusone/omnivoice-twilio
- [docs-godoc-url]: https://pkg.go.dev/github.com/plexusone/omnivoice-twilio
+ [go-ci-svg]: https://github.com/plexusone/twilio-go/actions/workflows/go-ci.yaml/badge.svg?branch=main
+ [go-ci-url]: https://github.com/plexusone/twilio-go/actions/workflows/go-ci.yaml
+ [go-lint-svg]: https://github.com/plexusone/twilio-go/actions/workflows/go-lint.yaml/badge.svg?branch=main
+ [go-lint-url]: https://github.com/plexusone/twilio-go/actions/workflows/go-lint.yaml
+ [go-sast-svg]: https://github.com/plexusone/twilio-go/actions/workflows/go-sast-codeql.yaml/badge.svg?branch=main
+ [go-sast-url]: https://github.com/plexusone/twilio-go/actions/workflows/go-sast-codeql.yaml
+ [goreport-svg]: https://goreportcard.com/badge/github.com/plexusone/twilio-go
+ [goreport-url]: https://goreportcard.com/report/github.com/plexusone/twilio-go
+ [docs-godoc-svg]: https://pkg.go.dev/badge/github.com/plexusone/twilio-go
+ [docs-godoc-url]: https://pkg.go.dev/github.com/plexusone/twilio-go
  [viz-svg]: https://img.shields.io/badge/visualizaton-Go-blue.svg
- [viz-url]: https://mango-dune-07a8b7110.1.azurestaticapps.net/?repo=plexusone%2Fomnivoice-twilio
- [loc-svg]: https://tokei.rs/b1/github/plexusone/omnivoice-twilio
- [repo-url]: https://github.com/plexusone/omnivoice-twilio
+ [viz-url]: https://mango-dune-07a8b7110.1.azurestaticapps.net/?repo=plexusone%2Ftwilio-go
+ [loc-svg]: https://tokei.rs/b1/github/plexusone/twilio-go
+ [repo-url]: https://github.com/plexusone/twilio-go
  [license-svg]: https://img.shields.io/badge/license-MIT-blue.svg
- [license-url]: https://github.com/plexusone/omnivoice-twilio/blob/master/LICENSE
+ [license-url]: https://github.com/plexusone/twilio-go/blob/master/LICENSE
 
-Twilio provider implementation for [OmniVoice](https://github.com/plexusone/omnivoice-core) - the voice abstraction layer for AgentPlexus.
+Go SDK for Twilio with adapters for [OmniChat](https://github.com/plexusone/omnichat) (SMS) and [OmniVoice](https://github.com/plexusone/omnivoice-core) (voice).
 
 ## Features
 
@@ -33,111 +33,125 @@ Twilio provider implementation for [OmniVoice](https://github.com/plexusone/omni
 - 📡 **Transport**: Twilio Media Streams for real-time audio
 - 🗣️ **TTS**: Text-to-speech via Twilio's Say verb (Alice, Polly, Google voices)
 - 👂 **STT**: Speech recognition via Gather verb and real-time transcription
-- 💬 **SMS**: Send SMS messages via SMSProvider interface
+- 💬 **SMS**: Send/receive SMS via OmniChat provider interface
 
 ## Installation
 
 ```bash
-go get github.com/plexusone/omnivoice-twilio
+go get github.com/plexusone/twilio-go
+```
+
+## Package Structure
+
+```
+twilio-go/
+├── client/           # Exported Twilio REST API client
+├── omnichat/         # SMS provider for omnichat
+└── omnivoice/
+    ├── callsystem/   # Call handling provider
+    ├── transport/    # Media Streams provider
+    ├── stt/          # Speech-to-text provider
+    └── tts/          # Text-to-speech provider
 ```
 
 ## Quick Start
 
-### Complete Voice Agent with Phone Calls
+### SMS (OmniChat)
 
 ```go
-package main
+import "github.com/plexusone/twilio-go/omnichat"
 
-import (
-    "context"
-    "fmt"
-    "log"
-    "net/http"
-
-    "github.com/plexusone/omnivoice-twilio/callsystem"
-    "github.com/plexusone/omnivoice-twilio/transport"
+provider, _ := omnichat.New(
+    omnichat.WithAccountSID("ACxxxxxxxx"),
+    omnichat.WithAuthToken("your-token"),
+    omnichat.WithPhoneNumber("+15551234567"),
 )
 
-func main() {
-    // Create Twilio call system
-    cs, err := callsystem.New(
-        callsystem.WithPhoneNumber("+15551234567"),
-        callsystem.WithWebhookURL("wss://your-server.com/media-stream"),
-    )
-    if err != nil {
-        log.Fatal(err)
-    }
+// Connect and send SMS
+provider.Connect(ctx)
+provider.Send(ctx, "+15559876543", provider.OutgoingMessage{
+    Content: "Hello from Twilio!",
+})
 
-    // Handle incoming calls
-    cs.OnIncomingCall(func(call callsystem.Call) error {
-        fmt.Printf("Incoming call from %s\n", call.From())
-        return call.Answer(context.Background())
-    })
+// Handle incoming SMS via webhook
+http.Handle("/sms", provider.WebhookHandler())
+```
 
-    // Make outbound call
-    call, err := cs.MakeCall(context.Background(), "+15559876543")
-    if err != nil {
-        log.Fatal(err)
-    }
-    fmt.Printf("Call initiated: %s\n", call.ID())
+### Voice Calls (OmniVoice)
 
-    // Set up HTTP handlers for Twilio webhooks
-    http.HandleFunc("/incoming", handleIncoming(cs))
-    http.HandleFunc("/media-stream", handleMediaStream(cs.Transport()))
-    http.ListenAndServe(":8080", nil)
-}
+```go
+import (
+    "github.com/plexusone/twilio-go/omnivoice/callsystem"
+    "github.com/plexusone/twilio-go/omnivoice/transport"
+)
 
-func handleIncoming(cs *callsystem.Provider) http.HandlerFunc {
-    return func(w http.ResponseWriter, r *http.Request) {
-        r.ParseForm()
-        callSID := r.FormValue("CallSid")
-        from := r.FormValue("From")
-        to := r.FormValue("To")
+// Create call system
+cs, _ := callsystem.New(
+    callsystem.WithPhoneNumber("+15551234567"),
+    callsystem.WithWebhookURL("wss://your-server.com/media-stream"),
+)
 
-        _, twiml, err := cs.HandleIncomingWebhook(callSID, from, to)
-        if err != nil {
-            http.Error(w, err.Error(), 500)
-            return
-        }
+// Handle incoming calls
+cs.OnIncomingCall(func(call callsystem.Call) error {
+    fmt.Printf("Incoming call from %s\n", call.From())
+    return call.Answer(context.Background())
+})
 
-        w.Header().Set("Content-Type", "application/xml")
-        w.Write([]byte(twiml))
-    }
-}
+// Make outbound call
+call, _ := cs.MakeCall(ctx, "+15559876543")
+fmt.Printf("Call initiated: %s\n", call.ID())
 
-func handleMediaStream(tr *transport.Provider) http.HandlerFunc {
-    return func(w http.ResponseWriter, r *http.Request) {
-        tr.HandleWebSocket(w, r, "/media-stream")
-    }
-}
+// Set up webhooks
+http.HandleFunc("/incoming", handleIncoming(cs))
+http.HandleFunc("/media-stream", handleMediaStream(cs.Transport()))
+```
+
+### Direct Client Usage
+
+```go
+import "github.com/plexusone/twilio-go/client"
+
+c, _ := client.New(&client.Config{
+    AccountSID: "ACxxxxxxxx",
+    AuthToken:  "your-token",
+})
+
+// Send SMS
+msg, _ := c.SendSMS(ctx, &client.SendSMSParams{
+    To:   "+15559876543",
+    From: "+15551234567",
+    Body: "Hello!",
+})
+
+// Make call
+call, _ := c.MakeCall(ctx, &client.MakeCallParams{
+    To:    "+15559876543",
+    From:  "+15551234567",
+    Twiml: "<Response><Say>Hello!</Say></Response>",
+})
 ```
 
 ### TTS (Text-to-Speech)
 
 ```go
-import "github.com/plexusone/omnivoice-twilio/tts"
+import "github.com/plexusone/twilio-go/omnivoice/tts"
 
 provider, _ := tts.New(
     tts.WithVoice("Polly.Joanna"),
     tts.WithLanguage("en-US"),
 )
 
-// Generate TwiML for a call
-result, _ := provider.Synthesize(ctx, "Hello, how can I help you?", tts.SynthesisConfig{
+// Generate TwiML
+result, _ := provider.Synthesize(ctx, "Hello!", tts.SynthesisConfig{
     VoiceID: "Polly.Matthew",
 })
-
-// result.Audio contains TwiML:
-// <?xml version="1.0"?>
-// <Response>
-//     <Say voice="Polly.Matthew" language="en-US">Hello, how can I help you?</Say>
-// </Response>
+// result.Audio contains TwiML
 ```
 
 ### STT (Speech-to-Text)
 
 ```go
-import "github.com/plexusone/omnivoice-twilio/stt"
+import "github.com/plexusone/twilio-go/omnivoice/stt"
 
 provider, _ := stt.New(
     stt.WithLanguage("en-US"),
@@ -154,79 +168,26 @@ twiml := provider.GenerateGatherTwiML(stt.GatherConfig{
 })
 ```
 
-### SMS
-
-```go
-import "github.com/plexusone/omnivoice-twilio/callsystem"
-
-// Create provider with default phone number
-provider, _ := callsystem.New(
-    callsystem.WithPhoneNumber("+15551234567"),
-)
-
-// Send SMS using default number
-msg, _ := provider.SendSMS(ctx, "+15559876543", "Hello from OmniVoice!")
-
-// Send SMS from specific number
-msg, _ = provider.SendSMSFrom(ctx, "+15559876543", "+15551234567", "Hello!")
-
-fmt.Printf("Message sent: %s\n", msg.ID)
-```
-
 ### Transport (Media Streams)
 
 ```go
-import "github.com/plexusone/omnivoice-twilio/transport"
+import "github.com/plexusone/twilio-go/omnivoice/transport"
 
 tr, _ := transport.New()
 
-// Start listening for Media Stream connections
+// Listen for Media Stream connections
 connCh, _ := tr.Listen(ctx, "/media-stream")
 
-// Handle connections
 for conn := range connCh {
     go func(c transport.Connection) {
-        // Read audio from caller
         audio := make([]byte, 1024)
         for {
-            n, err := c.AudioOut().Read(audio)
-            if err != nil {
-                break
-            }
-            // Process audio with STT...
-
-            // Send audio back to caller
+            n, _ := c.AudioOut().Read(audio)
+            // Process audio...
             c.AudioIn().Write(responseAudio)
         }
     }(conn)
 }
-```
-
-## Full Agent Stack
-
-For a complete voice agent, combine Twilio (calls + transport) with ElevenLabs (high-quality TTS/STT):
-
-```go
-import (
-    "github.com/plexusone/omnivoice-core/tts"
-    "github.com/plexusone/omnivoice-core/stt"
-    twiliocs "github.com/plexusone/omnivoice-twilio/callsystem"
-    twiliotransport "github.com/plexusone/omnivoice-twilio/transport"
-    eleventts "github.com/plexusone/elevenlabs-go/omnivoice/tts"
-    elevenstt "github.com/plexusone/elevenlabs-go/omnivoice/stt"
-)
-
-// Phone handling: Twilio
-callSystem, _ := twiliocs.New()
-transport, _ := twiliotransport.New()
-
-// High-quality voice: ElevenLabs
-ttsProvider, _ := eleventts.New()
-sttProvider, _ := elevenstt.New()
-
-// Multi-provider clients with fallback
-ttsClient := tts.NewClient(ttsProvider)
-sttClient := stt.NewClient(sttProvider)
 ```
 
 ## Configuration
@@ -238,96 +199,48 @@ export TWILIO_ACCOUNT_SID="your-account-sid"
 export TWILIO_AUTH_TOKEN="your-auth-token"
 ```
 
-### Explicit Configuration
+### Available Voices
 
-```go
-provider, _ := callsystem.New(
-    callsystem.WithAccountSID("ACxxxxxxxx"),
-    callsystem.WithAuthToken("your-token"),
-    callsystem.WithPhoneNumber("+15551234567"),
-    callsystem.WithWebhookURL("wss://your-server.com/media-stream"),
-)
-```
+**Twilio Basic**: `alice`, `man`, `woman`
 
-## Available Voices
+**Amazon Polly**: `Polly.Joanna`, `Polly.Matthew`, `Polly.Amy`, `Polly.Brian`, etc.
 
-### Twilio Basic
-- `alice` - Default female voice
-- `man` - Male voice
-- `woman` - Female voice
-
-### Amazon Polly (via Twilio)
-- `Polly.Joanna`, `Polly.Matthew`, `Polly.Amy`, `Polly.Brian`
-- `Polly.Ivy`, `Polly.Kendra`, `Polly.Kimberly`, `Polly.Salli`
-- `Polly.Joey`, `Polly.Justin`
-
-### Google TTS (via Twilio)
-- `Google.en-US-Standard-A` through `D`
-- `Google.en-US-Wavenet-A` through `D`
+**Google TTS**: `Google.en-US-Standard-A` through `D`, `Google.en-US-Wavenet-A` through `D`
 
 ## Testing
 
-Tests use the [OmniVoice conformance test](https://github.com/plexusone/omnivoice-core) framework and are gated behind the `integration` build tag.
-
-### Run All Tests
-
 ```bash
-export TWILIO_ACCOUNT_SID="ACxxxx"
-export TWILIO_AUTH_TOKEN="xxxx"
-export TWILIO_PHONE_NUMBER="+15551234567"   # Your Twilio number (caller ID)
-export TWILIO_TO_NUMBER="+15559876543"      # Recipient number for call tests
+# Unit tests
+go test -v ./...
 
-go test -v -tags=integration ./...
-```
-
-### Interface & Behavior Tests Only (No Credentials)
-
-TTS, STT, and transport interface/behavior tests run without credentials:
-
-```bash
-go test -v -tags=integration ./tts/ ./stt/ ./transport/
-```
-
-### Call Lifecycle Tests Only
-
-```bash
+# Integration tests (requires credentials)
 export TWILIO_ACCOUNT_SID="ACxxxx"
 export TWILIO_AUTH_TOKEN="xxxx"
 export TWILIO_PHONE_NUMBER="+15551234567"
-export TWILIO_TO_NUMBER="+15559876543"
-
-go test -v -tags=integration -run TestMakeCall ./internal/client/
-go test -v -tags=integration -run TestConformance/Integration ./callsystem/
+go test -v -tags=integration ./...
 ```
 
-## Architecture
+## Migration from omnivoice-twilio
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                    Phone Call Flow                      │
-├─────────────────────────────────────────────────────────┤
-│                                                         │
-│  Caller ←→ Twilio PSTN ←→ Media Streams ←→ Your Server  │
-│                                                         │
-│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐  │
-│  │ CallSystem  │    │  Transport  │    │   Agent     │  │
-│  │  (calls)    │←──→│  (audio)    │←──→│  (TTS/STT)  │  │
-│  └─────────────┘    └─────────────┘    └─────────────┘  │
-│                                                         │
-└─────────────────────────────────────────────────────────┘
-```
+This package was renamed from `omnivoice-twilio` to `twilio-go` in v0.4.0.
 
-## Requirements
+| Before | After |
+|--------|-------|
+| `github.com/plexusone/omnivoice-twilio/callsystem` | `github.com/plexusone/twilio-go/omnivoice/callsystem` |
+| `github.com/plexusone/omnivoice-twilio/transport` | `github.com/plexusone/twilio-go/omnivoice/transport` |
+| `github.com/plexusone/omnivoice-twilio/tts` | `github.com/plexusone/twilio-go/omnivoice/tts` |
+| `github.com/plexusone/omnivoice-twilio/stt` | `github.com/plexusone/twilio-go/omnivoice/stt` |
 
-- Go 1.21+
-- Twilio Account (Account SID + Auth Token)
-- Public webhook URL for incoming calls
-- WebSocket endpoint for Media Streams
+New in v0.4.0:
+
+- `github.com/plexusone/twilio-go/client` - Exported Twilio client
+- `github.com/plexusone/twilio-go/omnichat` - SMS provider for OmniChat
 
 ## Related Packages
 
-- [omnivoice](https://github.com/plexusone/omnivoice-core) - Core interfaces
-- [elevenlabs-go](https://github.com/plexusone/elevenlabs-go) - ElevenLabs SDK with OmniVoice provider at `elevenlabs-go/omnivoice`
+- [omnivoice-core](https://github.com/plexusone/omnivoice-core) - Voice interfaces
+- [omnichat](https://github.com/plexusone/omnichat) - Chat interfaces
+- [elevenlabs-go](https://github.com/plexusone/elevenlabs-go) - ElevenLabs SDK
 
 ## License
 
