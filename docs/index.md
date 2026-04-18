@@ -1,0 +1,74 @@
+# twilio-go
+
+Go SDK for Twilio with adapters for [OmniChat](https://github.com/plexusone/omnichat) (SMS) and [OmniVoice](https://github.com/plexusone/omnivoice-core) (voice).
+
+## Features
+
+- **Client**: Exported Twilio REST API client for calls and SMS
+- **Transport**: Twilio Media Streams for real-time audio
+- **TTS**: Text-to-speech via Twilio's Say verb (Alice, Polly, Google voices)
+- **STT**: Speech recognition via Gather verb and real-time transcription
+- **SMS**: Send/receive SMS via OmniChat provider interface
+
+## Package Structure
+
+```
+twilio-go/
+├── client/           # Exported Twilio REST API client
+├── omnichat/         # SMS provider for omnichat
+└── omnivoice/
+    ├── callsystem/   # Call handling provider
+    ├── transport/    # Media Streams provider
+    ├── stt/          # Speech-to-text provider
+    └── tts/          # Text-to-speech provider
+```
+
+## Quick Start
+
+### SMS (OmniChat)
+
+```go
+import "github.com/plexusone/twilio-go/omnichat"
+
+provider, _ := omnichat.New(
+    omnichat.WithAccountSID("ACxxxxxxxx"),
+    omnichat.WithAuthToken("your-token"),
+    omnichat.WithPhoneNumber("+15551234567"),
+)
+
+// Connect and send SMS
+provider.Connect(ctx)
+provider.Send(ctx, "+15559876543", provider.OutgoingMessage{
+    Content: "Hello from Twilio!",
+})
+
+// Handle incoming SMS via webhook
+http.Handle("/sms", provider.WebhookHandler())
+```
+
+### Voice (OmniVoice)
+
+```go
+import "github.com/plexusone/twilio-go/omnivoice/callsystem"
+
+provider, _ := callsystem.New(
+    callsystem.WithAccountSID("ACxxxxxxxx"),
+    callsystem.WithAuthToken("your-token"),
+    callsystem.WithPhoneNumber("+15551234567"),
+)
+
+// Make an outbound call
+call, _ := provider.MakeCall(ctx, "+15559876543", callbackURL)
+```
+
+## Installation
+
+```bash
+go get github.com/plexusone/twilio-go
+```
+
+## Links
+
+- [GitHub Repository](https://github.com/plexusone/twilio-go)
+- [Go Package Documentation](https://pkg.go.dev/github.com/plexusone/twilio-go)
+- [Changelog](https://github.com/plexusone/twilio-go/blob/main/CHANGELOG.md)
