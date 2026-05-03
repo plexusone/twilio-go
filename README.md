@@ -1,4 +1,4 @@
-# Twilio Go SDK
+# omni-twilio
 
 [![Go CI][go-ci-svg]][go-ci-url]
 [![Go Lint][go-lint-svg]][go-lint-url]
@@ -8,22 +8,22 @@
 [![Visualization][viz-svg]][viz-url]
 [![License][license-svg]][license-url]
 
- [go-ci-svg]: https://github.com/plexusone/twilio-go/actions/workflows/go-ci.yaml/badge.svg?branch=main
- [go-ci-url]: https://github.com/plexusone/twilio-go/actions/workflows/go-ci.yaml
- [go-lint-svg]: https://github.com/plexusone/twilio-go/actions/workflows/go-lint.yaml/badge.svg?branch=main
- [go-lint-url]: https://github.com/plexusone/twilio-go/actions/workflows/go-lint.yaml
- [go-sast-svg]: https://github.com/plexusone/twilio-go/actions/workflows/go-sast-codeql.yaml/badge.svg?branch=main
- [go-sast-url]: https://github.com/plexusone/twilio-go/actions/workflows/go-sast-codeql.yaml
- [goreport-svg]: https://goreportcard.com/badge/github.com/plexusone/twilio-go
- [goreport-url]: https://goreportcard.com/report/github.com/plexusone/twilio-go
- [docs-godoc-svg]: https://pkg.go.dev/badge/github.com/plexusone/twilio-go
- [docs-godoc-url]: https://pkg.go.dev/github.com/plexusone/twilio-go
+ [go-ci-svg]: https://github.com/plexusone/omni-twilio/actions/workflows/go-ci.yaml/badge.svg?branch=main
+ [go-ci-url]: https://github.com/plexusone/omni-twilio/actions/workflows/go-ci.yaml
+ [go-lint-svg]: https://github.com/plexusone/omni-twilio/actions/workflows/go-lint.yaml/badge.svg?branch=main
+ [go-lint-url]: https://github.com/plexusone/omni-twilio/actions/workflows/go-lint.yaml
+ [go-sast-svg]: https://github.com/plexusone/omni-twilio/actions/workflows/go-sast-codeql.yaml/badge.svg?branch=main
+ [go-sast-url]: https://github.com/plexusone/omni-twilio/actions/workflows/go-sast-codeql.yaml
+ [goreport-svg]: https://goreportcard.com/badge/github.com/plexusone/omni-twilio
+ [goreport-url]: https://goreportcard.com/report/github.com/plexusone/omni-twilio
+ [docs-godoc-svg]: https://pkg.go.dev/badge/github.com/plexusone/omni-twilio
+ [docs-godoc-url]: https://pkg.go.dev/github.com/plexusone/omni-twilio
  [viz-svg]: https://img.shields.io/badge/visualizaton-Go-blue.svg
- [viz-url]: https://mango-dune-07a8b7110.1.azurestaticapps.net/?repo=plexusone%2Ftwilio-go
- [loc-svg]: https://tokei.rs/b1/github/plexusone/twilio-go
- [repo-url]: https://github.com/plexusone/twilio-go
+ [viz-url]: https://mango-dune-07a8b7110.1.azurestaticapps.net/?repo=plexusone%2Fomni-twilio
+ [loc-svg]: https://tokei.rs/b1/github/plexusone/omni-twilio
+ [repo-url]: https://github.com/plexusone/omni-twilio
  [license-svg]: https://img.shields.io/badge/license-MIT-blue.svg
- [license-url]: https://github.com/plexusone/twilio-go/blob/master/LICENSE
+ [license-url]: https://github.com/plexusone/omni-twilio/blob/master/LICENSE
 
 Go SDK for Twilio with adapters for [OmniChat](https://github.com/plexusone/omnichat) (SMS) and [OmniVoice](https://github.com/plexusone/omnivoice-core) (voice).
 
@@ -38,13 +38,13 @@ Go SDK for Twilio with adapters for [OmniChat](https://github.com/plexusone/omni
 ## Installation
 
 ```bash
-go get github.com/plexusone/twilio-go
+go get github.com/plexusone/omni-twilio
 ```
 
 ## Package Structure
 
 ```
-twilio-go/
+omni-twilio/
 ├── client/           # Exported Twilio REST API client
 ├── omnichat/         # SMS provider for omnichat
 └── omnivoice/
@@ -59,7 +59,7 @@ twilio-go/
 ### SMS (OmniChat)
 
 ```go
-import "github.com/plexusone/twilio-go/omnichat"
+import "github.com/plexusone/omni-twilio/omnichat"
 
 provider, _ := omnichat.New(
     omnichat.WithAccountSID("ACxxxxxxxx"),
@@ -81,8 +81,8 @@ http.Handle("/sms", provider.WebhookHandler())
 
 ```go
 import (
-    "github.com/plexusone/twilio-go/omnivoice/callsystem"
-    "github.com/plexusone/twilio-go/omnivoice/transport"
+    "github.com/plexusone/omni-twilio/omnivoice/callsystem"
+    "github.com/plexusone/omni-twilio/omnivoice/transport"
 )
 
 // Create call system
@@ -109,7 +109,7 @@ http.HandleFunc("/media-stream", handleMediaStream(cs.Transport()))
 ### Direct Client Usage
 
 ```go
-import "github.com/plexusone/twilio-go/client"
+import "github.com/plexusone/omni-twilio/client"
 
 c, _ := client.New(&client.Config{
     AccountSID: "ACxxxxxxxx",
@@ -134,7 +134,7 @@ call, _ := c.MakeCall(ctx, &client.MakeCallParams{
 ### TTS (Text-to-Speech)
 
 ```go
-import "github.com/plexusone/twilio-go/omnivoice/tts"
+import "github.com/plexusone/omni-twilio/omnivoice/tts"
 
 provider, _ := tts.New(
     tts.WithVoice("Polly.Joanna"),
@@ -151,7 +151,7 @@ result, _ := provider.Synthesize(ctx, "Hello!", tts.SynthesisConfig{
 ### STT (Speech-to-Text)
 
 ```go
-import "github.com/plexusone/twilio-go/omnivoice/stt"
+import "github.com/plexusone/omni-twilio/omnivoice/stt"
 
 provider, _ := stt.New(
     stt.WithLanguage("en-US"),
@@ -171,7 +171,7 @@ twiml := provider.GenerateGatherTwiML(stt.GatherConfig{
 ### Transport (Media Streams)
 
 ```go
-import "github.com/plexusone/twilio-go/omnivoice/transport"
+import "github.com/plexusone/omni-twilio/omnivoice/transport"
 
 tr, _ := transport.New()
 
@@ -226,15 +226,15 @@ This package was renamed from `omnivoice-twilio` to `twilio-go` in v0.4.0.
 
 | Before | After |
 |--------|-------|
-| `github.com/plexusone/omnivoice-twilio/callsystem` | `github.com/plexusone/twilio-go/omnivoice/callsystem` |
-| `github.com/plexusone/omnivoice-twilio/transport` | `github.com/plexusone/twilio-go/omnivoice/transport` |
-| `github.com/plexusone/omnivoice-twilio/tts` | `github.com/plexusone/twilio-go/omnivoice/tts` |
-| `github.com/plexusone/omnivoice-twilio/stt` | `github.com/plexusone/twilio-go/omnivoice/stt` |
+| `github.com/plexusone/omnivoice-twilio/callsystem` | `github.com/plexusone/omni-twilio/omnivoice/callsystem` |
+| `github.com/plexusone/omnivoice-twilio/transport` | `github.com/plexusone/omni-twilio/omnivoice/transport` |
+| `github.com/plexusone/omnivoice-twilio/tts` | `github.com/plexusone/omni-twilio/omnivoice/tts` |
+| `github.com/plexusone/omnivoice-twilio/stt` | `github.com/plexusone/omni-twilio/omnivoice/stt` |
 
 New in v0.4.0:
 
-- `github.com/plexusone/twilio-go/client` - Exported Twilio client
-- `github.com/plexusone/twilio-go/omnichat` - SMS provider for OmniChat
+- `github.com/plexusone/omni-twilio/client` - Exported Twilio client
+- `github.com/plexusone/omni-twilio/omnichat` - SMS provider for OmniChat
 
 ## Related Packages
 

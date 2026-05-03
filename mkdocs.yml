@@ -1,8 +1,8 @@
-site_name: twilio-go
+site_name: omni-twilio
 site_description: Go SDK for Twilio with OmniVoice and OmniChat adapters
-site_url: https://plexusone.github.io/twilio-go/
-repo_url: https://github.com/plexusone/twilio-go
-repo_name: plexusone/twilio-go
+site_url: https://plexusone.github.io/omni-twilio/
+repo_url: https://github.com/plexusone/omni-twilio
+repo_name: plexusone/omni-twilio
 
 theme:
   name: material
@@ -58,4 +58,4 @@ nav:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/plexusone/twilio-go
+      link: https://github.com/plexusone/omni-twilio

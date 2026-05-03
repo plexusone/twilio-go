@@ -3,7 +3,7 @@
 ## Go Module
 
 ```bash
-go get github.com/plexusone/twilio-go
+go get github.com/plexusone/omni-twilio
 ```
 
 ## Twilio Credentials
@@ -29,24 +29,24 @@ Import the packages you need:
 === "SMS (OmniChat)"
 
     ```go
-    import "github.com/plexusone/twilio-go/omnichat"
+    import "github.com/plexusone/omni-twilio/omnichat"
     ```
 
 === "Voice (OmniVoice)"
 
     ```go
     import (
-        "github.com/plexusone/twilio-go/omnivoice/callsystem"
-        "github.com/plexusone/twilio-go/omnivoice/transport"
-        "github.com/plexusone/twilio-go/omnivoice/tts"
-        "github.com/plexusone/twilio-go/omnivoice/stt"
+        "github.com/plexusone/omni-twilio/omnivoice/callsystem"
+        "github.com/plexusone/omni-twilio/omnivoice/transport"
+        "github.com/plexusone/omni-twilio/omnivoice/tts"
+        "github.com/plexusone/omni-twilio/omnivoice/stt"
     )
     ```
 
 === "Direct Client"
 
     ```go
-    import "github.com/plexusone/twilio-go/client"
+    import "github.com/plexusone/omni-twilio/client"
     ```
 
 ## Verification
@@ -61,7 +61,7 @@ import (
     "fmt"
     "os"
 
-    "github.com/plexusone/twilio-go/client"
+    "github.com/plexusone/omni-twilio/client"
 )
 
 func main() {
@@ -84,7 +84,7 @@ func main() {
 
 ## Version Compatibility
 
-| twilio-go | omnichat | omnivoice-core | Go |
+| omni-twilio | omnichat | omnivoice-core | Go |
 |-----------|----------|----------------|-----|
 | v0.4.x | v0.5+ | v0.7+ | 1.21+ |
 | v0.3.x | - | v0.6+ | 1.21+ |

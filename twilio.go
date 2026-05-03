@@ -6,7 +6,7 @@
 //
 // # Installation
 //
-//	go get github.com/plexusone/twilio-go
+//	go get github.com/plexusone/omni-twilio
 //
 // # Environment Variables
 //
@@ -15,7 +15,7 @@
 //
 // # Quick Start - SMS (omnichat)
 //
-//	import "github.com/plexusone/twilio-go/omnichat"
+//	import "github.com/plexusone/omni-twilio/omnichat"
 //
 //	provider, _ := omnichat.New(
 //	    omnichat.WithPhoneNumber("+1234567890"),
@@ -25,8 +25,8 @@
 // # Quick Start - Voice (omnivoice)
 //
 //	import (
-//	    "github.com/plexusone/twilio-go/omnivoice/callsystem"
-//	    "github.com/plexusone/twilio-go/omnivoice/transport"
+//	    "github.com/plexusone/omni-twilio/omnivoice/callsystem"
+//	    "github.com/plexusone/omni-twilio/omnivoice/transport"
 //	)
 //
 //	cs, _ := callsystem.New()

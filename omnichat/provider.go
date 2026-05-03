@@ -11,7 +11,7 @@ import (
 
 	"github.com/plexusone/omnichat/provider"
 
-	"github.com/plexusone/twilio-go/client"
+	"github.com/plexusone/omni-twilio/client"
 )
 
 // Verify interface compliance at compile time.

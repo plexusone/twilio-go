@@ -1,4 +1,4 @@
-module github.com/plexusone/twilio-go
+module github.com/plexusone/omni-twilio
 
 go 1.26.0
 

@@ -10,8 +10,9 @@ import (
 	"github.com/plexusone/omnivoice-core/agent"
 	"github.com/plexusone/omnivoice-core/callsystem"
 	omnitransport "github.com/plexusone/omnivoice-core/transport"
-	"github.com/plexusone/twilio-go/client"
-	"github.com/plexusone/twilio-go/omnivoice/transport"
+
+	"github.com/plexusone/omni-twilio/client"
+	"github.com/plexusone/omni-twilio/omnivoice/transport"
 )
 
 // Verify interface compliance at compile time.

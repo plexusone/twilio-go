@@ -1,4 +1,4 @@
-# twilio-go
+# omni-twilio
 
 Go SDK for Twilio with adapters for [OmniChat](https://github.com/plexusone/omnichat) (SMS) and [OmniVoice](https://github.com/plexusone/omnivoice-core) (voice).
 
@@ -13,7 +13,7 @@ Go SDK for Twilio with adapters for [OmniChat](https://github.com/plexusone/omni
 ## Package Structure
 
 ```
-twilio-go/
+omni-twilio/
 ├── client/           # Exported Twilio REST API client
 ├── omnichat/         # SMS provider for omnichat
 └── omnivoice/
@@ -28,7 +28,7 @@ twilio-go/
 ### SMS (OmniChat)
 
 ```go
-import "github.com/plexusone/twilio-go/omnichat"
+import "github.com/plexusone/omni-twilio/omnichat"
 
 provider, _ := omnichat.New(
     omnichat.WithAccountSID("ACxxxxxxxx"),
@@ -49,7 +49,7 @@ http.Handle("/sms", provider.WebhookHandler())
 ### Voice (OmniVoice)
 
 ```go
-import "github.com/plexusone/twilio-go/omnivoice/callsystem"
+import "github.com/plexusone/omni-twilio/omnivoice/callsystem"
 
 provider, _ := callsystem.New(
     callsystem.WithAccountSID("ACxxxxxxxx"),
@@ -64,11 +64,11 @@ call, _ := provider.MakeCall(ctx, "+15559876543", callbackURL)
 ## Installation
 
 ```bash
-go get github.com/plexusone/twilio-go
+go get github.com/plexusone/omni-twilio
 ```
 
 ## Links
 
-- [GitHub Repository](https://github.com/plexusone/twilio-go)
-- [Go Package Documentation](https://pkg.go.dev/github.com/plexusone/twilio-go)
-- [Changelog](https://github.com/plexusone/twilio-go/blob/main/CHANGELOG.md)
+- [GitHub Repository](https://github.com/plexusone/omni-twilio)
+- [Go Package Documentation](https://pkg.go.dev/github.com/plexusone/omni-twilio)
+- [Changelog](https://github.com/plexusone/omni-twilio/blob/main/CHANGELOG.md)

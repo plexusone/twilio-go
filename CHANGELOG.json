@@ -1,7 +1,7 @@
 {
   "irVersion": "1.0",
-  "project": "twilio-go",
-  "repository": "https://github.com/plexusone/twilio-go",
+  "project": "omni-twilio",
+  "repository": "https://github.com/plexusone/omni-twilio",
   "versioning": "semver",
   "commitConvention": "conventional",
   "maintainers": ["johncwang@gmail.com"],
@@ -14,7 +14,7 @@
         { "description": "Add OmniChat SMS provider for omnichat integration" }
       ],
       "changed": [
-        { "description": "**Breaking**: Module path changed from `github.com/plexusone/omnivoice-twilio` to `github.com/plexusone/twilio-go`", "commit": "932a039" },
+        { "description": "**Breaking**: Module path changed from `github.com/plexusone/omnivoice-twilio` to `github.com/plexusone/omni-twilio`", "commit": "932a039" },
         { "description": "**Breaking**: OmniVoice providers moved to `omnivoice/` subdirectory", "commit": "932a039" }
       ],
       "added": [
