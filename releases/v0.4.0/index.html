@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://plexusone.github.io/omni-twilio/releases/v0.4.0/">
       
       
-        <link rel="prev" href="../../getting-started/installation/">
+        <link rel="prev" href="../v0.5.0/">
       
       
         <link rel="next" href="../v0.3.0/">
@@ -425,6 +425,29 @@
             Releases
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../v0.5.0/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    v0.5.0
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -940,14 +963,14 @@
 <p><strong>Release Date:</strong> 2026-04-18</p>
 <h2 id="highlights">Highlights<a class="headerlink" href="#highlights" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Breaking</strong>: Rename from <code>omnivoice-twilio</code> to <code>omni-twilio</code></li>
+<li><strong>Breaking</strong>: Rename from <code>omnivoice-twilio</code> to <code>twilio-go</code></li>
 <li>Add OmniChat SMS provider for omnichat integration</li>
 </ul>
 <h2 id="whats-new">What's New<a class="headerlink" href="#whats-new" title="Permanent link">&para;</a></h2>
 <h3 id="module-rename">Module Rename<a class="headerlink" href="#module-rename" title="Permanent link">&para;</a></h3>
-<p>The module has been renamed from <code>github.com/plexusone/omnivoice-twilio</code> to <code>github.com/plexusone/omni-twilio</code> to better reflect its expanded scope beyond voice-only functionality.</p>
+<p>The module has been renamed from <code>github.com/plexusone/omnivoice-twilio</code> to <code>github.com/plexusone/twilio-go</code> to better reflect its expanded scope beyond voice-only functionality.</p>
 <h3 id="new-package-structure">New Package Structure<a class="headerlink" href="#new-package-structure" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>omni-twilio/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>twilio-go/
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── client/           # Exported Twilio REST API client (was internal)
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>├── omnichat/         # NEW: SMS provider for omnichat
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>└── omnivoice/
@@ -958,7 +981,7 @@
 </code></pre></div>
 <h3 id="omnichat-sms-provider">OmniChat SMS Provider<a class="headerlink" href="#omnichat-sms-provider" title="Permanent link">&para;</a></h3>
 <p>New <code>omnichat</code> package implementing <code>provider.Provider</code> from <a href="https://github.com/plexusone/omnichat">omnichat</a>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="s">&quot;github.com/plexusone/omni-twilio/omnichat&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">import</span><span class="w"> </span><span class="s">&quot;github.com/plexusone/twilio-go/omnichat&quot;</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nx">provider</span><span class="p">,</span><span class="w"> </span><span class="nx">_</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">omnichat</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="nx">omnichat</span><span class="p">.</span><span class="nx">WithAccountSID</span><span class="p">(</span><span class="s">&quot;ACxxxxxxxx&quot;</span><span class="p">),</span>
@@ -977,7 +1000,7 @@
 </code></pre></div>
 <h3 id="exported-twilio-client">Exported Twilio Client<a class="headerlink" href="#exported-twilio-client" title="Permanent link">&para;</a></h3>
 <p>The Twilio REST API client is now exported at <code>client/</code> (previously <code>internal/client</code>):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span><span class="w"> </span><span class="s">&quot;github.com/plexusone/omni-twilio/client&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span><span class="w"> </span><span class="s">&quot;github.com/plexusone/twilio-go/client&quot;</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nx">c</span><span class="p">,</span><span class="w"> </span><span class="nx">_</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="nx">client</span><span class="p">.</span><span class="nx">New</span><span class="p">(</span><span class="o">&amp;</span><span class="nx">client</span><span class="p">.</span><span class="nx">Config</span><span class="p">{</span>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nx">AccountSID</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ACxxxxxxxx&quot;</span><span class="p">,</span>
@@ -994,7 +1017,7 @@
 <h2 id="breaking-changes">Breaking Changes<a class="headerlink" href="#breaking-changes" title="Permanent link">&para;</a></h2>
 <h3 id="module-path">Module Path<a class="headerlink" href="#module-path" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="gd">- import &quot;github.com/plexusone/omnivoice-twilio/callsystem&quot;</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="gi">+ import &quot;github.com/plexusone/omni-twilio/omnivoice/callsystem&quot;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="gi">+ import &quot;github.com/plexusone/twilio-go/omnivoice/callsystem&quot;</span>
 </code></pre></div>
 <h3 id="package-locations">Package Locations<a class="headerlink" href="#package-locations" title="Permanent link">&para;</a></h3>
 <table>
@@ -1007,34 +1030,34 @@
 <tbody>
 <tr>
 <td><code>omnivoice-twilio/callsystem</code></td>
-<td><code>omni-twilio/omnivoice/callsystem</code></td>
+<td><code>twilio-go/omnivoice/callsystem</code></td>
 </tr>
 <tr>
 <td><code>omnivoice-twilio/transport</code></td>
-<td><code>omni-twilio/omnivoice/transport</code></td>
+<td><code>twilio-go/omnivoice/transport</code></td>
 </tr>
 <tr>
 <td><code>omnivoice-twilio/stt</code></td>
-<td><code>omni-twilio/omnivoice/stt</code></td>
+<td><code>twilio-go/omnivoice/stt</code></td>
 </tr>
 <tr>
 <td><code>omnivoice-twilio/tts</code></td>
-<td><code>omni-twilio/omnivoice/tts</code></td>
+<td><code>twilio-go/omnivoice/tts</code></td>
 </tr>
 </tbody>
 </table>
-<p>Note: The Twilio client is now exported at <code>omni-twilio/client</code> (previously internal and inaccessible).</p>
+<p>Note: The Twilio client is now exported at <code>twilio-go/client</code> (previously internal and inaccessible).</p>
 <h2 id="migration-guide">Migration Guide<a class="headerlink" href="#migration-guide" title="Permanent link">&para;</a></h2>
 <h3 id="step-1-update-import-paths">Step 1: Update Import Paths<a class="headerlink" href="#step-1-update-import-paths" title="Permanent link">&para;</a></h3>
 <p>Replace all imports:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Using sed</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.go&quot;</span><span class="w"> </span>-exec<span class="w"> </span>sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s1">&#39;s|github.com/plexusone/omnivoice-twilio|github.com/plexusone/omni-twilio/omnivoice|g&#39;</span><span class="w"> </span><span class="o">{}</span><span class="w"> </span>+
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s1">&#39;s|github.com/plexusone/omnivoice-twilio|github.com/plexusone/twilio-go/omnivoice|g&#39;</span><span class="w"> </span><span class="o">{}</span><span class="w"> </span>+
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Or manually update imports</span>
 </code></pre></div>
 <h3 id="step-2-update-gomod">Step 2: Update go.mod<a class="headerlink" href="#step-2-update-gomod" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>go<span class="w"> </span>get<span class="w"> </span>github.com/plexusone/omni-twilio@v0.4.0
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>go<span class="w"> </span>get<span class="w"> </span>github.com/plexusone/twilio-go@v0.4.0
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>go<span class="w"> </span>mod<span class="w"> </span>tidy
 </code></pre></div>
 <h3 id="step-3-verify-build">Step 3: Verify Build<a class="headerlink" href="#step-3-verify-build" title="Permanent link">&para;</a></h3>
@@ -1050,7 +1073,7 @@
 <li>Resolve G120 gosec lint errors by adding <code>http.MaxBytesReader</code> to webhook handlers</li>
 </ul>
 <h2 id="full-changelog">Full Changelog<a class="headerlink" href="#full-changelog" title="Permanent link">&para;</a></h2>
-<p>See <a href="https://github.com/plexusone/omni-twilio/blob/main/CHANGELOG.md">CHANGELOG.md</a> for the complete list of changes.</p>
+<p>See <a href="https://github.com/plexusone/twilio-go/blob/main/CHANGELOG.md">CHANGELOG.md</a> for the complete list of changes.</p>
 
 
 
