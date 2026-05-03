@@ -7,6 +7,19 @@
   "maintainers": ["johncwang@gmail.com"],
   "releases": [
     {
+      "version": "v0.5.0",
+      "date": "2026-05-03",
+      "highlights": [
+        { "description": "**Breaking**: Rename module from `twilio-go` to `omni-twilio`" }
+      ],
+      "changed": [
+        { "description": "**Breaking**: Module path changed from `github.com/plexusone/twilio-go` to `github.com/plexusone/omni-twilio`" }
+      ],
+      "documentation": [
+        { "description": "Update all import paths, URLs, and badges for omni-twilio" }
+      ]
+    },
+    {
       "version": "v0.4.0",
       "date": "2026-04-18",
       "highlights": [
@@ -14,7 +27,7 @@
         { "description": "Add OmniChat SMS provider for omnichat integration" }
       ],
       "changed": [
-        { "description": "**Breaking**: Module path changed from `github.com/plexusone/omnivoice-twilio` to `github.com/plexusone/omni-twilio`", "commit": "932a039" },
+        { "description": "**Breaking**: Module path changed from `github.com/plexusone/omnivoice-twilio` to `github.com/plexusone/twilio-go`", "commit": "932a039" },
         { "description": "**Breaking**: OmniVoice providers moved to `omnivoice/` subdirectory", "commit": "932a039" }
       ],
       "added": [

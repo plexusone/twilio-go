@@ -220,9 +220,23 @@ export TWILIO_PHONE_NUMBER="+15551234567"
 go test -v -tags=integration ./...
 ```
 
-## Migration from omnivoice-twilio
+## Migration
 
-This package was renamed from `omnivoice-twilio` to `twilio-go` in v0.4.0.
+### From twilio-go (v0.5.0)
+
+This package was renamed from `twilio-go` to `omni-twilio` in v0.5.0 to align with the omni-* naming convention.
+
+```bash
+# Update imports
+find . -name "*.go" -exec sed -i '' \
+  's|github.com/plexusone/twilio-go|github.com/plexusone/omni-twilio|g' {} +
+
+# Update go.mod
+go get github.com/plexusone/omni-twilio@v0.5.0
+go mod tidy
+```
+
+### From omnivoice-twilio (v0.4.0)
 
 | Before | After |
 |--------|-------|
@@ -231,7 +245,7 @@ This package was renamed from `omnivoice-twilio` to `twilio-go` in v0.4.0.
 | `github.com/plexusone/omnivoice-twilio/tts` | `github.com/plexusone/omni-twilio/omnivoice/tts` |
 | `github.com/plexusone/omnivoice-twilio/stt` | `github.com/plexusone/omni-twilio/omnivoice/stt` |
 
-New in v0.4.0:
+Added in v0.4.0:
 
 - `github.com/plexusone/omni-twilio/client` - Exported Twilio client
 - `github.com/plexusone/omni-twilio/omnichat` - SMS provider for OmniChat

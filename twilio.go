@@ -34,7 +34,7 @@
 package twilio
 
 // Version is the SDK version.
-const Version = "0.4.0"
+const Version = "0.5.0"
 
 // ProviderName is the name used to identify this provider in OmniVoice.
 const ProviderName = "twilio"
