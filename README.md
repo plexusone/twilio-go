@@ -1,4 +1,4 @@
-# omni-twilio
+# Omni-Twilio
 
 [![Go CI][go-ci-svg]][go-ci-url]
 [![Go Lint][go-lint-svg]][go-lint-url]
@@ -23,7 +23,7 @@
  [loc-svg]: https://tokei.rs/b1/github/plexusone/omni-twilio
  [repo-url]: https://github.com/plexusone/omni-twilio
  [license-svg]: https://img.shields.io/badge/license-MIT-blue.svg
- [license-url]: https://github.com/plexusone/omni-twilio/blob/master/LICENSE
+ [license-url]: https://github.com/plexusone/omni-twilio/blob/main/LICENSE
 
 Go SDK for Twilio with adapters for [OmniChat](https://github.com/plexusone/omnichat) (SMS) and [OmniVoice](https://github.com/plexusone/omnivoice-core) (voice).
 
