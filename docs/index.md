@@ -1,4 +1,4 @@
-# omni-twilio
+# Omni-Twilio
 
 Go SDK for Twilio with adapters for [OmniChat](https://github.com/plexusone/omnichat) (SMS) and [OmniVoice](https://github.com/plexusone/omnivoice-core) (voice).
 
