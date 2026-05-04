@@ -4,7 +4,7 @@ go 1.26.0
 
 require (
 	github.com/gorilla/websocket v1.5.3
-	github.com/plexusone/omnichat v0.6.0
+	github.com/plexusone/omnichat v0.6.1
 	github.com/plexusone/omnivoice-core v0.9.0
 	github.com/twilio/twilio-go v1.30.5
 )
